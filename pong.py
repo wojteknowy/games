@@ -7,6 +7,10 @@ win_width = 800
 win_height = 600
 win = pygame.display.set_mode((win_width, win_height))
 pygame.display.set_caption("Pong")
+
+
+
+
 # paletka gracza
 rocket_width = 100
 rocket_hight = 20
@@ -19,6 +23,16 @@ rocket1.fill(blue)
 rocket1_squ = rocket1.get_rect()
 rocket1_squ.x = rocket_1_pos[0]
 rocket1_squ.y = rocket_1_pos[1]
+
+#paletka komputera
+white = (0, 0, 0)
+rocket_C_pos = (350, 40)
+rocket_C = pygame.Surface([rocket_width, rocket_hight])
+rocket_C.fill(white)
+rocket_C_squ = rocket_C.get_rect()
+rocket_C_squ.x = rocket_C_pos[0]
+rocket_C_squ.y = rocket_C_pos[1]
+speed_C = 5
 
 #piłka
 ball_width = 20
@@ -52,7 +66,10 @@ while run:
         ball_speed_X *= -1
 
     if ball_sql.top <= 0:
-        ball_speed_Y *= -1
+       # ball_speed_Y *= -1
+       ball_sql.x = win_width / 2
+       ball_sql.y = win_height / 2
+
     if ball_sql.bottom >= win_height:
         ball_sql.x = win_width / 2
         ball_sql.y = win_height / 2
@@ -76,11 +93,21 @@ while run:
             shift = 0
 
         rocket1_squ.x = shift
+     # Jak gra komputer
+    if ball_sql.centerx > rocket_C_squ.centerx:
+        rocket_C_squ.x += speed_C
+    elif ball_sql.centerx < rocket_C_squ.centerx:
+        rocket_C_squ.x -= speed_C
+
+    if ball_sql.colliderect(rocket_C_squ):
+        ball_speed_Y *= -1
+        ball_sql.top = rocket_C_squ.bottom
 
     # Rysowanie
 
     win.fill((230, 255, 255))
     win.blit(rocket1, rocket1_squ)
+    win.blit(rocket_C, rocket_C_squ)
     win.blit(ball, ball_sql)
     fpsClock.tick(FPS)
     pygame.display.update()
