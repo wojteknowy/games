@@ -19,6 +19,23 @@ rocket1.fill(blue)
 rocket1_squ = rocket1.get_rect()
 rocket1_squ.x = rocket_1_pos[0]
 rocket1_squ.y = rocket_1_pos[1]
+
+#piłka
+ball_width = 20
+ball_height = 20
+green = (0, 255, 0)
+ball_speed_X = 6
+ball_speed_Y = 6
+
+ball = pygame.Surface([ball_width, ball_height], pygame.SRCALPHA, 32).convert_alpha()
+pygame.draw.ellipse(ball, green, [0, 0, ball_height, ball_width])
+ball_sql = ball.get_rect()
+ball_sql.x = win_width / 2
+ball_sql.y = win_height / 2
+
+FPS = 30
+fpsClock = pygame.time.Clock()
+
 run = True
 
 while run:
@@ -27,7 +44,24 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
+    #ruch piłki
+    ball_sql.move_ip(ball_speed_X, ball_speed_Y)
+    if ball_sql.right >= win_width:
+        ball_speed_X *= -1
+    if ball_sql.left <= 0:
+        ball_speed_X *= -1
 
+    if ball_sql.top <= 0:
+        ball_speed_Y *= -1
+    if ball_sql.bottom >= win_height:
+        ball_sql.x = win_width / 2
+        ball_sql.y = win_height / 2
+
+    # Dotknięcie paletki gracza
+
+    if ball_sql.colliderect(rocket1_squ):
+        ball_speed_Y *= -1
+        ball_sql.bottom = rocket1_squ.top
     keys = pygame.key.get_pressed()
     # Sterowanie myszką
     if event.type == MOUSEMOTION:
@@ -47,6 +81,8 @@ while run:
 
     win.fill((230, 255, 255))
     win.blit(rocket1, rocket1_squ)
+    win.blit(ball, ball_sql)
+    fpsClock.tick(FPS)
     pygame.display.update()
 
 pygame.quit()
