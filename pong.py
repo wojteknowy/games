@@ -49,7 +49,7 @@ ball_sql.y = win_height / 2
 
 FPS = 30
 fpsClock = pygame.time.Clock()
-
+over = 'Game Over'
 pkt_P = '0'
 pkt_comp = '0'
 fontObj = pygame.font.Font('PixelCards.ttf', 64)  # czcionka komunikatów
@@ -69,7 +69,16 @@ def printPktComp():
     win.blit(textC, textC_squ)
 
 
+def gameover():
+    if pkt_comp == '2' or pkt_P == '2':
+        text = fontObj.render(over, True, (0, 0, 0))
+        text_squ = text.get_rect()
+        text_squ.center = (win_width / 2, win_height / 2)
+        win.blit(text, text_squ)
+        pygame.time.delay(1000)
+
 run = True
+
 
 while run:
     pygame.time.delay(50)
@@ -111,7 +120,7 @@ while run:
         if shift < 0:
             shift = 0
 
-       # rocket1_squ.x = shift
+    # rocket1_squ.x = shift
     # Jak gra komputer
     if ball_sql.centerx > rocket_C_squ.centerx:
         rocket_C_squ.x += speed_C
@@ -139,6 +148,7 @@ while run:
     win.fill((230, 255, 255))
     printPktComp()
     printPktPlayer()
+    gameover()
     win.blit(rocket1, rocket1_squ)
     win.blit(rocket_C, rocket_C_squ)
     win.blit(ball, ball_sql)
